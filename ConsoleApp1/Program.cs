@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Skapa en lista med några ord för teständamål
+        List<int> numbers = new List<int> { 1, 3, 5, 7, 9 };
+
+        // Testa metoderna
+        TestMaximum(numbers);
+        TestMinimum(numbers);
+        TestMean(numbers);
+        TestMedian(numbers);
+        TestMode(numbers);
+        TestRange(numbers);
+        TestStandardDeviation(numbers);
+    }
+
+    // Enhetstest för metoden Maximum
+    static void TestMaximum(List<int> numbers)
+    {
+        Console.WriteLine($"Maximum: {Statistics.Maximum(numbers)}");
+    }
+
+    // Enhetstest för metoden Minimum
+    static void TestMinimum(List<int> numbers)
+    {
+        Console.WriteLine($"Minimum: {Statistics.Minimum(numbers)}");
+    }
+
+    // Enhetstest för metoden Mean
+    static void TestMean(List<int> numbers)
+    {
+        Console.WriteLine($"Mean: {Statistics.Mean(numbers)}");
+    }
+
+    // Enhetstest för metoden Median
+    static void TestMedian(List<int> numbers)
+    {
+        Console.WriteLine($"Median: {Statistics.Median(numbers)}");
+    }
+
+    // Enhetstest för metoden Mode
+    static void TestMode(List<int> numbers)
+    {
+        Console.WriteLine($"Mode: {string.Join(", ", Statistics.Mode(numbers))}");
+    }
+
+    // Enhetstest för metoden Range
+    static void TestRange(List<int> numbers)
+    {
+        Console.WriteLine($"Range: {Statistics.Range(numbers)}");
+    }
+
+    // Enhetstest för metoden StandardDeviation
+    static void TestStandardDeviation(List<int> numbers)
+    {
+        Console.WriteLine($"Standard Deviation: {Statistics.StandardDeviation(numbers)}");
+    }
+}
+
+class Statistics
+{
+    public static int Maximum(List<int> numbers)
+    {
+        if (numbers.Count == 0) return 0;
+        return numbers.Max();
+    }
+
+    public static int Minimum(List<int> numbers)
+    {
+        if (numbers.Count == 0) return 0;
+        return numbers.Min();
+    }
+
+    public static double Mean(List<int> numbers)
+    {
+        if (numbers.Count == 0) return 0;
+        return numbers.Average();
+    }
+
+    public static double Median(List<int> numbers)
+    {
+        if (numbers.Count == 0) return 0;
+        List<int> sortedNumbers = numbers.OrderBy(n => n).ToList();
+        int size = sortedNumbers.Count;
+        int mid = size / 2;
+        double median = (size % 2 != 0) ? sortedNumbers[mid] : (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2.0;
+        return median;
+    }
+
+    public static List<int> Mode(List<int> numbers)
+    {
+        if (numbers.Count == 0) return new List<int>();
+        Dictionary<int, int> numberCounts = new Dictionary<int, int>();
+        foreach (int num in numbers)
+        {
+            if (numberCounts.ContainsKey(num))
+            {
+                numberCounts[num]++;
+            }
+            else
+            {
+                numberCounts[num] = 1;
+            }
+        }
+        int maxCount = numberCounts.Values.Max();
+        List<int> modes = numberCounts.Where(kv => kv.Value == maxCount).Select(kv => kv.Key).ToList();
+        return modes;
+    }
+
+    public static int Range(List<int> numbers)
+    {
+        if (numbers.Count == 0) return 0;
+        return numbers.Max() - numbers.Min();
+    }
+
+    public static double StandardDeviation(List<int> numbers)
+    {
+        if (numbers.Count == 0) return 0;
+        double average = numbers.Average();
+        double sumOfSquaresOfDifferences = numbers.Select(val => (val - average) * (val - average)).Sum();
+        double sd = Math.Sqrt(sumOfSquaresOfDifferences / numbers.Count);
+        return sd;
+    }
+}
+ 
